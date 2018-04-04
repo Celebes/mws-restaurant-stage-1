@@ -325,3 +325,14 @@ nav h1 a {
 #restaurant-hours td {
     color: #666;
 }
+
+#skip-map {
+    position: fixed;
+    top: -20px;
+    height: 20px;
+    z-index: 1111;
+}
+
+#skip-map:focus {
+    top: 0;
+}
