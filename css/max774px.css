@@ -1,0 +1,16 @@
+/* ====================== Restaurant Listing ====================== */
+#restaurants-list {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#restaurants-list li {
+    border: none;
+    border-top: 2px solid #ccc;
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
