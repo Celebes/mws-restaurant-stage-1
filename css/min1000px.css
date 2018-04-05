@@ -6,7 +6,3 @@
 .box-map {
     order: 1;
 }
-
-.inside #footer {
-    width: calc(100% - 50px);
-}
