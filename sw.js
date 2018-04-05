@@ -22,6 +22,16 @@ self.addEventListener('install', function (event) {
                 'img/8.jpg',
                 'img/9.jpg',
                 'img/10.jpg',
+                'img/1_320w.jpg',
+                'img/2_320w.jpg',
+                'img/3_320w.jpg',
+                'img/4_320w.jpg',
+                'img/5_320w.jpg',
+                'img/6_320w.jpg',
+                'img/7_320w.jpg',
+                'img/8_320w.jpg',
+                'img/9_320w.jpg',
+                'img/10_320w.jpg',
                 'index.html',
                 'restaurant.html'
             ]);

@@ -43,7 +43,10 @@
         <!-- Beginning restaurant -->
         <section id="restaurant-container">
             <h1 id="restaurant-name" tabindex="-1"></h1>
-            <img id="restaurant-img">
+            <!-- img takes 100% of the screen minus 20 padding on each side when viewport width is < 1000px -->
+            <!-- and 50% of the screen minus 20 padding on each side when viewport width is >= 1000px -->
+            <!-- additional minus 17px is for scrollbar -->
+            <img id="restaurant-img" sizes="(min-width: 1000px) calc(50vw - 40px - 17px), calc(100vw - 40px - 17px)">
             <p id="restaurant-cuisine"></p>
             <p id="restaurant-address"></p>
             <table id="restaurant-hours"></table>
