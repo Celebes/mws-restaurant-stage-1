@@ -6,6 +6,7 @@ const browserSync = require('browser-sync').create();
 
 const BUILD_DEV_TASKS = [
     'copy-html',
+	'copy-manifest',
     'copy-css',
     'copy-sw',
     'copy-images',
@@ -17,6 +18,7 @@ const BUILD_DEV_TASKS = [
 
 const BUILD_PROD_TASKS = [
     'copy-html',
+	'copy-manifest',
     'copy-sw',
     'copy-images',
     'copy-lazysizes',
@@ -26,7 +28,7 @@ const BUILD_PROD_TASKS = [
     'scripts-prod'
 ];
 
-gulp.task('default', BUILD_DEV_TASKS, function () {
+gulp.task('default', BUILD_PROD_TASKS, function () {
     gulp.watch('./css/*.css', ['copy-css']);
     gulp.watch('./js/**/*.js', ['scripts']);
     gulp.watch('./sw.js', ['copy-sw']);
@@ -52,6 +54,11 @@ gulp.task('minify-css', () => {
 
 gulp.task('copy-html', () => {
     gulp.src('./*.html')
+        .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('copy-manifest', () => {
+    gulp.src('./manifest.json')
         .pipe(gulp.dest('./dist'));
 });
 
