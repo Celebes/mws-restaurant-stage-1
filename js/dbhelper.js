@@ -1,7 +1,22 @@
+let dbPromise;
+
 /**
  * Common database helper functions.
  */
 class DBHelper {
+
+    static get DB_PROMISE() {
+        if (!navigator.serviceWorker) {
+            return Promise.resolve();
+        }
+
+        if (!this.dbPromise) {
+            this.dbPromise = idb.open('restaurants-db', 1, function (upgradeDb) {
+                upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
+            });
+        }
+        return this.dbPromise;
+    }
 
     /**
      * Backend URL.
@@ -16,6 +31,8 @@ class DBHelper {
      * Fetch all restaurants.
      */
     static fetchRestaurants(callback) {
+        DBHelper.fetchRestaurantsFromDB(callback);
+
         fetch(DBHelper.BACKEND_URL)
             .then(response => {
                 if (!response.ok) {
@@ -23,14 +40,66 @@ class DBHelper {
                 }
                 return response.json();
             })
-            .then(restaurants => callback(null, restaurants))
-            .catch(error => callback(error, null));
+            .then(restaurants => {
+                DBHelper.saveRestaurantsToDB(restaurants);
+                return callback(null, restaurants)
+            })
+            .catch(error => callback(error, null))
+    }
+
+    static fetchRestaurantsFromDB(callback) {
+        DBHelper.DB_PROMISE.then(db => {
+            if (!db) return;
+
+            db.transaction('restaurants')
+                .objectStore('restaurants')
+                .getAll()
+                .then(restaurants => {
+                    if (restaurants && restaurants.length > 0) {
+                        callback(null, restaurants);
+                    }
+                });
+        });
+    }
+
+    static fetchRestaurantFromDBById(id, callback) {
+        DBHelper.DB_PROMISE.then(db => {
+            if (!db) return;
+
+            db.transaction('restaurants')
+                .objectStore('restaurants')
+                .get(Number(id))
+                .then(restaurant => {
+                    if (restaurant) {
+                        callback(null, restaurant);
+                    }
+                });
+        });
+    }
+
+    static saveRestaurantsToDB(restaurants) {
+        DBHelper.DB_PROMISE.then(db => {
+            const tx = db.transaction('restaurants', 'readwrite');
+            for (let restaurant of restaurants) {
+                tx.objectStore('restaurants').put(restaurant);
+            }
+            return tx.complete;
+        })
+    }
+
+    static saveRestaurantToDB(restaurant) {
+        DBHelper.DB_PROMISE.then(db => {
+            const tx = db.transaction('restaurants', 'readwrite');
+            tx.objectStore('restaurants').put(restaurant);
+            return tx.complete;
+        })
     }
 
     /**
      * Fetch a restaurant by its ID.
      */
     static fetchRestaurantById(id, callback) {
+        DBHelper.fetchRestaurantFromDBById(id, callback);
         fetch(`${DBHelper.BACKEND_URL}/${id}`)
             .then(response => {
                 if (!response.ok) {
@@ -38,7 +107,10 @@ class DBHelper {
                 }
                 return response.json();
             })
-            .then(restaurant => callback(null, restaurant))
+            .then(restaurant => {
+                DBHelper.saveRestaurantToDB(restaurant);
+                return callback(null, restaurant);
+            })
             .catch(error => callback(error, null));
     }
 
@@ -142,7 +214,7 @@ class DBHelper {
      * Restaurant image URL.
      */
     static imageUrlForRestaurant(restaurant) {
-        return (`/img/${restaurant.photograph}.jpg`);
+        return (`/img/${restaurant.photograph ? restaurant.photograph : restaurant.id}.jpg`);
     }
 
     /**
