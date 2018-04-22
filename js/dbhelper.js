@@ -213,8 +213,13 @@ class DBHelper {
     /**
      * Restaurant image URL.
      */
-    static imageUrlForRestaurant(restaurant) {
-        return (`/img/${restaurant.photograph ? restaurant.photograph : restaurant.id}.jpg`);
+    static imageUrlForRestaurant(restaurant, smaller) {
+        const canUseWebp = document.getElementsByTagName('html').item(0).classList.contains('webp');
+        const filePath = canUseWebp ? '/img/webp/' : '/img/';
+        const fileName = `${restaurant.photograph ? restaurant.photograph : restaurant.id}`;
+        const fileSufix = smaller ? '_320w' : '';
+        const fileExtension = canUseWebp ? '.webp' : '.jpg';
+        return (`${filePath}${fileName}${fileSufix}${fileExtension}`);
     }
 
     /**
