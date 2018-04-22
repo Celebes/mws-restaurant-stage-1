@@ -1,8 +1,0 @@
-/* ====================== Restaurant Filtering ====================== */
-.filter-options {
-    height: 150px;
-}
-
-#neighborhoods-select, #cuisines-select {
-    width: calc(100% - 20px);
-}

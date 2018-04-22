@@ -1,9 +1,11 @@
-let dbPromise;
-
 /**
  * Common database helper functions.
  */
 class DBHelper {
+
+    constructor() {
+        this.dbPromise = undefined;
+    }
 
     static get DB_PROMISE() {
         if (!navigator.serviceWorker) {
@@ -36,7 +38,7 @@ class DBHelper {
         fetch(DBHelper.BACKEND_URL)
             .then(response => {
                 if (!response.ok) {
-                    throw Error(`Request failed. Returned status of ${response.statusText}`);
+                    Promise.reject(`Request failed. Returned status of ${response.statusText}`);
                 }
                 return response.json();
             })
@@ -103,7 +105,7 @@ class DBHelper {
         fetch(`${DBHelper.BACKEND_URL}/${id}`)
             .then(response => {
                 if (!response.ok) {
-                    throw Error(`Request failed. Returned status of ${response.statusText}`);
+                    Promise.reject(`Request failed. Returned status of ${response.statusText}`);
                 }
                 return response.json();
             })

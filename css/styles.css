@@ -337,3 +337,46 @@ nav.main h1 a {
 #skip-map:focus {
     top: 0;
 }
+
+/* ------- RESPONSIVE ------- */
+
+@media screen and (max-width: 460px) {
+    /* ====================== Restaurant Filtering ====================== */
+    .filter-options {
+        height: 150px;
+    }
+
+    #neighborhoods-select, #cuisines-select {
+        width: calc(100% - 20px);
+    }
+}
+
+@media screen and (max-width: 774px) {
+    /* ====================== Restaurant Listing ====================== */
+    #restaurants-list {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    #restaurants-list li {
+        border: none;
+        border-top: 2px solid #ccc;
+        border-bottom: 2px solid #ccc;
+        width: 100%;
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .box {
+        width: 50%;
+        overflow-y: scroll;
+    }
+
+    .box-map {
+        order: 1;
+    }
+}
