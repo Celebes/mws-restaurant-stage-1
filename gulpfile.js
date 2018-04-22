@@ -3,7 +3,6 @@ const cleanCSS = require('gulp-clean-css');
 const webp = require('gulp-webp');
 const babel = require('gulp-babel');
 const browserSync = require('browser-sync').create();
-const compress = require('compression');
 
 const BUILD_DEV_TASKS = [
     'copy-html',
@@ -27,7 +26,7 @@ const BUILD_PROD_TASKS = [
     'scripts-prod'
 ];
 
-gulp.task('default', BUILD_PROD_TASKS, function () {
+gulp.task('default', BUILD_DEV_TASKS, function () {
     gulp.watch('./css/*.css', ['copy-css']);
     gulp.watch('./js/**/*.js', ['scripts']);
     gulp.watch('./sw.js', ['copy-sw']);
@@ -38,8 +37,7 @@ gulp.task('default', BUILD_PROD_TASKS, function () {
 
     browserSync.init({
         server: {
-            baseDir: './dist',
-            middleware: [compress()]
+            baseDir: './dist'
         }
     });
 });

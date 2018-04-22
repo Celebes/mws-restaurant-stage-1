@@ -1,25 +1,9 @@
-let restaurants,
-    neighborhoods,
-    cuisines;
-var map;
-var markers = [];
-
-/**
- * Fetch neighborhoods and cuisines as soon as the page is loaded.
- */
-document.addEventListener('DOMContentLoaded', (event) => {
-    fetchNeighborhoods();
-    fetchCuisines();
-    //registerServiceWorker();
-});
-
-registerServiceWorker = () => {
-    if (!navigator.serviceWorker) {
-        return;
-    }
-
-    navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(function (reg) {
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js', {scope: '/'}).then(function (reg) {
+        console.log('reg', reg);
         if (reg.installing) {
+            console.log('reg.installing', reg.installing);
+            reg.installing.onerror = (error) => console.log('error', error);
             console.log('Service worker installing');
         } else if (reg.waiting) {
             console.log('Service worker installed');
@@ -32,6 +16,20 @@ registerServiceWorker = () => {
         console.log('Registration failed with ' + error);
     });
 }
+
+let restaurants,
+    neighborhoods,
+    cuisines;
+var map;
+var markers = [];
+
+/**
+ * Fetch neighborhoods and cuisines as soon as the page is loaded.
+ */
+document.addEventListener('DOMContentLoaded', (event) => {
+    fetchNeighborhoods();
+    fetchCuisines();
+});
 
 /**
  * Fetch all neighborhoods and set their HTML.
@@ -91,7 +89,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
 /**
  * Initialize Google map, called from HTML.
  */
-window.initMap = () => {
+initMap = () => {
     let loc = {
         lat: 40.722216,
         lng: -73.987501

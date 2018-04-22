@@ -1,6 +1,11 @@
 const STATIC_CACHE_NAME = 'udacity-static-v1';
 
+self.addEventListener('error', function(e) {
+    console.log('SW ERROR', e.filename, e.lineno, e.colno, e.message);
+});
+
 self.addEventListener('install', function (event) {
+    console.log('install', event);
     event.waitUntil(
         caches.open(STATIC_CACHE_NAME).then(function (cache) {
             return cache.addAll([
@@ -8,10 +13,6 @@ self.addEventListener('install', function (event) {
                 'js/dbhelper.js',
                 'js/restaurant_info.js',
                 'css/styles.css',
-                'css/max460px.css',
-                'css/max774px.css',
-                'css/min1000px.css',
-                'data/restaurants.json',
                 'img/1.jpg',
                 'img/2.jpg',
                 'img/3.jpg',
@@ -47,7 +48,9 @@ self.addEventListener('fetch', function (event) {
             return fetch(event.request).then(function (response) {
                 let responseClone = response.clone();
                 caches.open(STATIC_CACHE_NAME).then(function (cache) {
-                    cache.put(event.request, responseClone);
+                    if(event.request.method !== 'POST' && !event.request.url.startsWith('chrome-extension')) {
+                        cache.put(event.request, responseClone);
+                    }
                 });
                 return response;
             }).catch(function () {
