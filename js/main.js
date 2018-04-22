@@ -161,10 +161,10 @@ createRestaurantHTML = (restaurant, index) => {
     const numOfRestaurants = self.restaurants.length;
 
     const image = document.createElement('img');
-    image.className = 'restaurant-img';
-    image.src = DBHelper.imageUrlForRestaurant(restaurant);
-    image.srcset = `/img/${restaurant.photograph ? restaurant.photograph : restaurant.id}_320w.jpg 320w, ${DBHelper.imageUrlForRestaurant(restaurant)} 800w`;
-    image.sizes = `(max-width: 774px) 100vw, 320px`;
+    image.className = 'restaurant-img lazyload';
+    image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
+    image.setAttribute('data-srcset', `/img/${restaurant.photograph ? restaurant.photograph : restaurant.id}_320w.jpg 320w, ${DBHelper.imageUrlForRestaurant(restaurant)} 800w`);
+    image.setAttribute('data-sizes', '(max-width: 774px) 100vw, 320px')
     image.alt = `Restaurant named ${restaurant.name} serving ${restaurant.cuisine_type} food, located in ${restaurant.neighborhood}`;
     li.append(image);
 

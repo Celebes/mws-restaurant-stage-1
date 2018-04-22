@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "idb": "^2.1.1"
+  },
+  "dependencies": {
+    "lazysizes": "^4.0.2"
   }
 }

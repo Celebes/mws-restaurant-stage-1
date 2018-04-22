@@ -48,7 +48,7 @@
             <!-- img takes 100% of the screen minus 20 padding on each side when viewport width is < 1000px -->
             <!-- and 50% of the screen minus 20 padding on each side when viewport width is >= 1000px -->
             <!-- additional minus 17px is for scrollbar -->
-            <img id="restaurant-img" sizes="(min-width: 1000px) calc(50vw - 40px - 17px), calc(100vw - 40px - 17px)">
+            <img id="restaurant-img" data-sizes="(min-width: 1000px) calc(50vw - 40px - 17px), calc(100vw - 40px - 17px)">
             <p id="restaurant-cuisine"></p>
             <p id="restaurant-address"></p>
             <table id="restaurant-hours"></table>
@@ -70,6 +70,7 @@
 <!-- End footer -->
 
 <!-- Beginning scripts -->
+<script src="node_modules/lazysizes/lazysizes.min.js" async=""></script>
 <script type="text/javascript" charset="utf-8" src="node_modules/idb/lib/idb.js"></script>
 <!-- Database helpers -->
 <script type="text/javascript" src="js/dbhelper.js"></script>
