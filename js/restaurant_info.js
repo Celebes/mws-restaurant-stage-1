@@ -56,7 +56,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     while (favContainer.firstChild) {
         favContainer.removeChild(favContainer.firstChild);
     }
-    favContainer.innerHtml = '';
     const fav = document.createElement('a');
     const isRestaurantFavorite = DBHelper.isRestaurantFavorite(restaurant.is_favorite);
     DBHelper.updateFavoriteButtonHTML(fav, isRestaurantFavorite);
@@ -109,23 +108,37 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (restaurant = self.restaurant) => {
     const container = document.getElementById('reviews-container');
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
     const title = document.createElement('h2');
     title.innerHTML = 'Reviews';
     container.appendChild(title);
 
-    if (!reviews) {
-        const noReviews = document.createElement('p');
-        noReviews.innerHTML = 'No reviews yet!';
-        container.appendChild(noReviews);
-        return;
-    }
-    const ul = document.getElementById('reviews-list');
-    reviews.forEach(review => {
-        ul.appendChild(createReviewHTML(review));
+    DBHelper.fetchRestaurantReviews(restaurant.id, (error, reviews) => {
+        if (error) { // Got an error!
+            console.error(error);
+            const noReviews = document.createElement('p');
+            noReviews.innerHTML = 'Couldn\'t load reviews!';
+            container.appendChild(noReviews);
+            return;
+        }
+
+        if (!reviews) {
+            const noReviews = document.createElement('p');
+            noReviews.innerHTML = 'No reviews yet!';
+            container.appendChild(noReviews);
+            return;
+        }
+
+        const ul = document.createElement('ul');
+        reviews.forEach(review => {
+            ul.appendChild(createReviewHTML(review));
+        });
+        container.appendChild(ul);
     });
-    container.appendChild(ul);
 }
 
 /**
@@ -138,7 +151,7 @@ createReviewHTML = (review) => {
     li.appendChild(name);
 
     const date = document.createElement('p');
-    date.innerHTML = review.date;
+    date.innerHTML = (new Date(review.createdAt)).toLocaleString();
     li.appendChild(date);
 
     const rating = document.createElement('p');

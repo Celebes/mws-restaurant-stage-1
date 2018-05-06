@@ -116,6 +116,23 @@ class DBHelper {
             .catch(error => callback(error, null));
     }
 
+    static fetchRestaurantReviews(id, callback) {
+        console.log('fetchRestaurantReviews!');
+        // TODO DB
+        fetch(`${DBHelper.BACKEND_URL}/reviews/?restaurant_id=${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    Promise.reject(`Request failed. Returned status of ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(reviews => {
+                // TODO DB
+                return callback(null, reviews);
+            })
+            .catch(error => callback(error, null));
+    }
+
     /**
      * Fetch restaurants by a cuisine type with proper error handling.
      */
