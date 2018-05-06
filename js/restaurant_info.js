@@ -4,7 +4,7 @@ var map;
 /**
  * Initialize Google map, called from HTML.
  */
-initMap = () => {
+window.initMap = () => {
     fetchRestaurantFromURL((error, restaurant) => {
         if (error) { // Got an error!
             console.error(error);
@@ -190,4 +190,25 @@ getParameterByName = (name, url) => {
     if (!results[2])
         return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+addReview = (e, form, restaurant = self.restaurant) => {
+    e.preventDefault();
+    const formData = {
+        restaurant_id: restaurant.id,
+        name: form.name.value,
+        rating: form.rating.value,
+        comments: form.comments.value
+    };
+    console.log('formData', formData);
+    DBHelper.addReview(formData, (error, response) => {
+        const submitStatus = document.getElementById('submit-status');
+        if (error) {
+            submitStatus.innerText = 'ERROR ADDING REVIEW';
+        } else {
+            console.log('response from adding review', response);
+            submitStatus.innerText = 'SUCCES ADDING REVIEW';
+            fillReviewsHTML();
+        }
+    });
 }

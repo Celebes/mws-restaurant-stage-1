@@ -319,4 +319,21 @@ class DBHelper {
         button.innerHTML = favorite ? 'FAVORITE' : 'NOT FAVORITE';
         button.className = favorite ? 'main-button favorite-button' : 'main-button not-favorite-button';
     }
+
+    static addReview(formData, callback) {
+        fetch(`${DBHelper.BACKEND_URL}/reviews/`, {
+            method: 'POST',
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    Promise.reject(`Request failed. Returned status of ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(response => {
+                return callback(null, response)
+            })
+            .catch(error => callback(error, null))
+    }
 }

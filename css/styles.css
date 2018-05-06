@@ -303,6 +303,10 @@ nav.main h1 a {
     padding: 20px;
 }
 
+#reviews-container {
+    padding-bottom: 100px;
+}
+
 #reviews-container h2 {
     color: #f58500;
     font-size: 24pt;

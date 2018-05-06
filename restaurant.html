@@ -47,12 +47,42 @@
             <!-- img takes 100% of the screen minus 20 padding on each side when viewport width is < 1000px -->
             <!-- and 50% of the screen minus 20 padding on each side when viewport width is >= 1000px -->
             <!-- additional minus 17px is for scrollbar -->
-            <img id="restaurant-img" data-sizes="(min-width: 1000px) calc(50vw - 40px - 17px), calc(100vw - 40px - 17px)">
+            <img id="restaurant-img"
+                 data-sizes="(min-width: 1000px) calc(50vw - 40px - 17px), calc(100vw - 40px - 17px)">
             <p id="restaurant-cuisine"></p>
             <p id="restaurant-address"></p>
             <table id="restaurant-hours"></table>
         </section>
         <!-- end restaurant -->
+        <!-- ADD REVIEW -->
+        <div id="add-review-wrapper">
+            <form action="http://localhost:1337/reviews/" method="POST" onsubmit="addReview(event, this)">
+                <label>
+                    Username:
+                    <input type="text" name="name">
+                </label>
+                <br>
+                <label>
+                    Rating:
+                    <select name="rating">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </label>
+                <br>
+                <label>
+                    Review:
+                    <textarea name="comments" rows="4" cols="50"></textarea>
+                </label>
+                <br>
+                <button type="submit">ADD</button>
+            </form>
+            <div id="submit-status"></div>
+        </div>
+        <!-- END ADD REVIEW -->
         <!-- Beginning reviews -->
         <section id="reviews-container"></section>
         <!-- End reviews -->
@@ -70,12 +100,11 @@
 <script async defer src="js/lazysizes.min.js"></script>
 <script async defer type="text/javascript" charset="utf-8" src="js/idb.js"></script>
 <!-- Database helpers -->
-<script async defer type="text/javascript" src="js/dbhelper.js"></script>
+<script type="text/javascript" src="js/dbhelper.js"></script>
 <!-- Main javascript file -->
 <script async defer type="text/javascript" src="js/restaurant_info.js"></script>
 <!-- Google Maps -->
-<script async defer
-        callback="initMap" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIHpYCSR_OJZ8-B2GqLndkIfZ1fYt4oac&libraries=places&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIHpYCSR_OJZ8-B2GqLndkIfZ1fYt4oac&libraries=places&callback=initMap"></script>
 <!-- End scripts -->
 
 </body>
