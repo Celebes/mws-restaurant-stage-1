@@ -199,7 +199,7 @@ nav.main h1 a {
     font-size: 11pt;
 }
 
-#restaurants-list li a {
+.main-button {
     background-color: black;
     border-bottom: 3px solid #eee;
     color: #fff;
@@ -210,6 +210,16 @@ nav.main h1 a {
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
+}
+
+.favorite-button {
+    margin-left: 10px;
+    background-color: darkgreen;
+}
+
+.not-favorite-button {
+    margin-left: 10px;
+    background-color: darkgrey;
 }
 
 /* ====================== Restaurant Details ====================== */

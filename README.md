@@ -4,11 +4,11 @@
 
 ## 0. Start the backend server!
 
-checkout https://github.com/Celebes/mws-restaurant-stage-2 repository on your local machine, then follow instructions in its README.md file.
+checkout https://github.com/Celebes/mws-restaurant-stage-3 repository on your local machine, then follow instructions in its README.md file.
 
 ## 1. Install all the required dependencies!
 
-You need to have installed: `npm` (or `yarn`), `node.js`, `gulp` and `browser-sync` globally.
+You need to have installed: `npm` (or `yarn`), `node.js`, `gulp`, `sails` and `browser-sync` globally.
 
 After that use either `npm install` or `yarn install` in the project's root folder.
 

@@ -169,7 +169,8 @@ createRestaurantHTML = (restaurant, index) => {
     li.append(image);
 
     const name = document.createElement('h2');
-    name.innerHTML = restaurant.name;
+    //name.innerHTML = restaurant.name;
+    name.innerHTML = restaurant.is_favorite;
     li.append(name);
 
     const neighborhood = document.createElement('p');
@@ -182,9 +183,18 @@ createRestaurantHTML = (restaurant, index) => {
 
     const more = document.createElement('a');
     more.innerHTML = 'View Details';
+    more.className = 'main-button';
     more.href = DBHelper.urlForRestaurant(restaurant);
     more.setAttribute('aria-label', 'View Details for ' + restaurant.name);
     li.append(more);
+
+    const fav = document.createElement('a');
+    const isRestaurantFavorite = DBHelper.isRestaurantFavorite(restaurant.is_favorite);
+    fav.innerHTML = isRestaurantFavorite ? 'FAVORITE' : 'NOT FAVORITE';
+    fav.className = isRestaurantFavorite ? 'main-button favorite-button' : 'main-button not-favorite-button';
+    fav.onclick = () => DBHelper.toggleRestaurantFavorite(fav, restaurant);
+    fav.setAttribute('aria-label', isRestaurantFavorite ? `Unfavorite ${restaurant.name}` : `Mark ${restaurant.name} as favorite`);
+    li.append(fav);
 
     li.setAttribute('aria-posinset', `${index + 1}`);
     li.setAttribute('aria-setsize', `${numOfRestaurants}`);

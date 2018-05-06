@@ -28,7 +28,7 @@ const BUILD_PROD_TASKS = [
     'scripts-prod'
 ];
 
-gulp.task('default', BUILD_PROD_TASKS, function () {
+gulp.task('default', BUILD_DEV_TASKS, function () {
     gulp.watch('./css/*.css', ['copy-css']);
     gulp.watch('./js/**/*.js', ['scripts']);
     gulp.watch('./sw.js', ['copy-sw']);
@@ -95,7 +95,7 @@ gulp.task('convert-img-to-webp', () =>
 
 gulp.task('scripts', () => {
     gulp.src('js/**/*.js')
-        .pipe(babel())
+        //.pipe(babel())
         .pipe(gulp.dest('dist/js'));
 })
 

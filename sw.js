@@ -1,6 +1,7 @@
 const STATIC_CACHE_NAME = 'udacity-static-v1';
+const BACKEND_URL = 'http://localhost:1337/';
 
-self.addEventListener('error', function(e) {
+self.addEventListener('error', function (e) {
     console.log('SW ERROR', e.filename, e.lineno, e.colno, e.message);
 });
 
@@ -65,6 +66,9 @@ self.addEventListener('install', function (event) {
 });
 
 self.addEventListener('fetch', function (event) {
+    if (event.request.method !== 'GET' || event.request.url.startsWith(BACKEND_URL)) {
+        return;
+    }
     event.respondWith(caches.match(event.request).then(function (response) {
         if (response !== undefined) {
             return response;
@@ -72,7 +76,7 @@ self.addEventListener('fetch', function (event) {
             return fetch(event.request).then(function (response) {
                 let responseClone = response.clone();
                 caches.open(STATIC_CACHE_NAME).then(function (cache) {
-                    if(event.request.method !== 'POST' && !event.request.url.startsWith('chrome-extension')) {
+                    if (!event.request.url.startsWith('chrome-extension')) {
                         cache.put(event.request, responseClone);
                     }
                 });

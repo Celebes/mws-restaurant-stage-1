@@ -239,4 +239,28 @@ class DBHelper {
         return marker;
     }
 
+    /* initially is_favorite is boolean (false) or undefined on the server, but after setting it through PUT, it becomes string */
+    static isRestaurantFavorite(favoriteVal) {
+        if (favoriteVal) {
+            return String(favoriteVal) === 'true' ? true : false;
+        } else {
+            return false;
+        }
+    }
+
+    static toggleRestaurantFavorite(fav, restaurant) {
+        const newFavoriteValue = !DBHelper.isRestaurantFavorite(restaurant.is_favorite);
+        console.log('toggleRestaurantFavorite, new value will be ', newFavoriteValue);
+        fetch(`${DBHelper.BACKEND_URL}/${restaurant.id}/?is_favorite=${newFavoriteValue}`, {
+            method: 'PUT'
+        }).then(response => response.json())
+            .then(response => {
+                fav.innerHTML = newFavoriteValue ? 'FAVORITE' : 'NOT FAVORITE';
+                fav.className = newFavoriteValue ? 'main-button favorite-button' : 'main-button not-favorite-button';
+                // update in DB
+                restaurant.is_favorite = newFavoriteValue;
+                DBHelper.saveRestaurantToDB(restaurant);
+            })
+            .catch(error => console.error('Error toggleRestaurantFavorite:', error));
+    }
 }
