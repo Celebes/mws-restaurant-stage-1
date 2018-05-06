@@ -15,6 +15,7 @@ class DBHelper {
         if (!this.dbPromise) {
             this.dbPromise = idb.open('restaurants-db', 1, function (upgradeDb) {
                 upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
+                upgradeDb.createObjectStore('reviews', {keyPath: 'id'});
             });
         }
         return this.dbPromise;
@@ -79,6 +80,22 @@ class DBHelper {
         });
     }
 
+    static fetchReviewsFromDBByRestaurantId(rId, callback) {
+        console.log('fetchReviewsFromDBByRestaurantId');
+        DBHelper.DB_PROMISE.then(db => {
+            if (!db) return;
+
+            db.transaction('reviews')
+                .objectStore('reviews')
+                .getAll()
+                .then(restaurants => {
+                    if (restaurants && restaurants.length > 0) {
+                        callback(null, restaurants.filter(r => r.restaurant_id === rId));
+                    }
+                });
+        });
+    }
+
     static saveRestaurantsToDB(restaurants) {
         DBHelper.DB_PROMISE.then(db => {
             const tx = db.transaction('restaurants', 'readwrite');
@@ -93,6 +110,24 @@ class DBHelper {
         DBHelper.DB_PROMISE.then(db => {
             const tx = db.transaction('restaurants', 'readwrite');
             tx.objectStore('restaurants').put(restaurant);
+            return tx.complete;
+        })
+    }
+
+    static saveReviewsToDB(reviews) {
+        DBHelper.DB_PROMISE.then(db => {
+            const tx = db.transaction('reviews', 'readwrite');
+            for (let review of reviews) {
+                tx.objectStore('reviews').put(review);
+            }
+            return tx.complete;
+        })
+    }
+
+    static saveReviewToDB(review) {
+        DBHelper.DB_PROMISE.then(db => {
+            const tx = db.transaction('reviews', 'readwrite');
+            tx.objectStore('reviews').put(review);
             return tx.complete;
         })
     }
@@ -118,7 +153,7 @@ class DBHelper {
 
     static fetchRestaurantReviews(id, callback) {
         console.log('fetchRestaurantReviews!');
-        // TODO DB
+        DBHelper.fetchReviewsFromDBByRestaurantId(id, callback);
         fetch(`${DBHelper.BACKEND_URL}/reviews/?restaurant_id=${id}`)
             .then(response => {
                 if (!response.ok) {
@@ -127,7 +162,7 @@ class DBHelper {
                 return response.json();
             })
             .then(reviews => {
-                // TODO DB
+                DBHelper.saveReviewsToDB(reviews);
                 return callback(null, reviews);
             })
             .catch(error => callback(error, null));
