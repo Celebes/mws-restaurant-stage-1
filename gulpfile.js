@@ -33,9 +33,9 @@ gulp.task('default', BUILD_DEV_TASKS, function () {
     gulp.watch('./js/**/*.js', ['scripts']);
     gulp.watch('./sw.js', ['copy-sw']);
     gulp.watch('./index.html', ['copy-html']);
-    gulp.watch('./restaurant_info.html', ['copy-html']);
+    gulp.watch('./restaurant.html', ['copy-html']);
     gulp.watch('./dist/index.html').on('change', browserSync.reload);
-    gulp.watch('./dist/restaurant_info.html').on('change', browserSync.reload);
+    gulp.watch('./dist/restaurant.html').on('change', browserSync.reload);
 
     browserSync.init({
         server: {

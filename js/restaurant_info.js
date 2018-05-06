@@ -52,6 +52,18 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     const name = document.getElementById('restaurant-name');
     name.innerHTML = restaurant.name;
 
+    const favContainer = document.getElementById('favorite-button-wrapper');
+    while (favContainer.firstChild) {
+        favContainer.removeChild(favContainer.firstChild);
+    }
+    favContainer.innerHtml = '';
+    const fav = document.createElement('a');
+    const isRestaurantFavorite = DBHelper.isRestaurantFavorite(restaurant.is_favorite);
+    DBHelper.updateFavoriteButtonHTML(fav, isRestaurantFavorite);
+    fav.onclick = () => DBHelper.toggleRestaurantFavorite(fav, restaurant);
+    fav.setAttribute('aria-label', isRestaurantFavorite ? `Unfavorite ${restaurant.name}` : `Mark ${restaurant.name} as favorite`);
+    favContainer.append(fav);
+
     const address = document.getElementById('restaurant-address');
     address.innerHTML = restaurant.address;
 

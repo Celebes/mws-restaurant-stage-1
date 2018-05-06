@@ -26,7 +26,7 @@ class DBHelper {
      */
     static get BACKEND_URL() {
         const port = 1337; // Change this to your server port
-        return `http://localhost:${port}/restaurants`;
+        return `http://localhost:${port}`;
     }
 
     /**
@@ -35,7 +35,7 @@ class DBHelper {
     static fetchRestaurants(callback) {
         DBHelper.fetchRestaurantsFromDB(callback);
 
-        fetch(DBHelper.BACKEND_URL)
+        fetch(`${DBHelper.BACKEND_URL}/restaurants`)
             .then(response => {
                 if (!response.ok) {
                     Promise.reject(`Request failed. Returned status of ${response.statusText}`);
@@ -102,7 +102,7 @@ class DBHelper {
      */
     static fetchRestaurantById(id, callback) {
         DBHelper.fetchRestaurantFromDBById(id, callback);
-        fetch(`${DBHelper.BACKEND_URL}/${id}`)
+        fetch(`${DBHelper.BACKEND_URL}/restaurants/${id}`)
             .then(response => {
                 if (!response.ok) {
                     Promise.reject(`Request failed. Returned status of ${response.statusText}`);
@@ -250,17 +250,21 @@ class DBHelper {
 
     static toggleRestaurantFavorite(fav, restaurant) {
         const newFavoriteValue = !DBHelper.isRestaurantFavorite(restaurant.is_favorite);
-        console.log('toggleRestaurantFavorite, new value will be ', newFavoriteValue);
-        fetch(`${DBHelper.BACKEND_URL}/${restaurant.id}/?is_favorite=${newFavoriteValue}`, {
+        fetch(`${DBHelper.BACKEND_URL}/restaurants/${restaurant.id}/?is_favorite=${newFavoriteValue}`, {
             method: 'PUT'
         }).then(response => response.json())
-            .then(response => {
-                fav.innerHTML = newFavoriteValue ? 'FAVORITE' : 'NOT FAVORITE';
-                fav.className = newFavoriteValue ? 'main-button favorite-button' : 'main-button not-favorite-button';
+            .then(r => {
+                // update the view
+                DBHelper.updateFavoriteButtonHTML(fav, newFavoriteValue);
                 // update in DB
                 restaurant.is_favorite = newFavoriteValue;
                 DBHelper.saveRestaurantToDB(restaurant);
             })
             .catch(error => console.error('Error toggleRestaurantFavorite:', error));
+    }
+
+    static updateFavoriteButtonHTML(button, favorite) {
+        button.innerHTML = favorite ? 'FAVORITE' : 'NOT FAVORITE';
+        button.className = favorite ? 'main-button favorite-button' : 'main-button not-favorite-button';
     }
 }

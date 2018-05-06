@@ -205,20 +205,19 @@ nav.main h1 a {
     color: #fff;
     display: inline-block;
     font-size: 10pt;
-    margin: 15px 0 0;
-    padding: 8px 30px 10px;
+    margin-top: 15px;
+    margin-right: 10px;
+    padding: 5px;
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
 }
 
 .favorite-button {
-    margin-left: 10px;
     background-color: darkgreen;
 }
 
 .not-favorite-button {
-    margin-left: 10px;
     background-color: darkgrey;
 }
 
@@ -346,6 +345,11 @@ nav.main h1 a {
 
 #skip-map:focus {
     top: 0;
+}
+
+#favorite-button-wrapper {
+    text-align: center;
+    margin: 0 auto 30px;
 }
 
 /* ------- RESPONSIVE ------- */

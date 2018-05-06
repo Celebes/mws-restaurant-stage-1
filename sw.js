@@ -65,6 +65,8 @@ self.addEventListener('install', function (event) {
     );
 });
 
+/* We only want SW to GET and handle static resources (either from our web server or google maps api).
+ * We ignore our backend server, because we always want the freshest data from it. */
 self.addEventListener('fetch', function (event) {
     if (event.request.method !== 'GET' || event.request.url.startsWith(BACKEND_URL)) {
         return;
