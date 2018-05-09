@@ -53,9 +53,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     name.innerHTML = restaurant.name;
 
     const favContainer = document.getElementById('favorite-button-wrapper');
-    while (favContainer.firstChild) {
-        favContainer.removeChild(favContainer.firstChild);
-    }
+    favContainer.innerHTML = '';
     const fav = document.createElement('a');
     const isRestaurantFavorite = DBHelper.isRestaurantFavorite(restaurant.is_favorite);
     DBHelper.updateFavoriteButtonHTML(fav, isRestaurantFavorite);
@@ -90,6 +88,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
  */
 fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
     const hours = document.getElementById('restaurant-hours');
+    hours.innerHTML = '';
     for (let key in operatingHours) {
         const row = document.createElement('tr');
 
@@ -109,15 +108,13 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (restaurant = self.restaurant) => {
-    const container = document.getElementById('reviews-container');
-    while (container.firstChild) {
-        container.removeChild(container.firstChild);
-    }
-    const title = document.createElement('h2');
-    title.innerHTML = 'Reviews';
-    container.appendChild(title);
-
     DBHelper.fetchRestaurantReviews(restaurant.id, (error, reviews) => {
+        const container = document.getElementById('reviews-container');
+        container.innerHTML = '';
+        const title = document.createElement('h2');
+        title.innerHTML = 'Reviews';
+        container.appendChild(title);
+        
         if (error) { // Got an error!
             console.error(error);
             const noReviews = document.createElement('p');
@@ -169,11 +166,9 @@ createReviewHTML = (review) => {
  * Add restaurant name to the breadcrumb navigation menu
  */
 fillBreadcrumb = (restaurant = self.restaurant) => {
-    const breadcrumb = document.getElementById('breadcrumb');
-    const li = document.createElement('li');
-    li.innerHTML = restaurant.name;
-    li.setAttribute('aria-current', 'page');
-    breadcrumb.appendChild(li);
+    const breadcrumb = document.getElementById('breadcrumb-current-page');
+    breadcrumb.innerHTML = restaurant.name;
+    breadcrumb.setAttribute('aria-current', 'page');
 }
 
 /**
