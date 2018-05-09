@@ -16,6 +16,7 @@ class DBHelper {
             this.dbPromise = idb.open('restaurants-db', 1, function (upgradeDb) {
                 upgradeDb.createObjectStore('restaurants', {keyPath: 'id'});
                 upgradeDb.createObjectStore('reviews', {keyPath: 'id'});
+                upgradeDb.createObjectStore('reviews-to-resend', {keyPath: 'id'});
             });
         }
         return this.dbPromise;
@@ -129,7 +130,61 @@ class DBHelper {
             const tx = db.transaction('reviews', 'readwrite');
             tx.objectStore('reviews').put(review);
             return tx.complete;
-        })
+        });
+    }
+
+    static fetchRestaurantReviewsToResend(id, callback) {
+        DBHelper.DB_PROMISE.then(db => {
+            if (!db) return;
+
+            db.transaction('reviews-to-resend')
+                .objectStore('reviews-to-resend')
+                .getAll()
+                .then(restaurants => {
+                    if (restaurants && restaurants.length > 0) {
+                        callback(null, restaurants.filter(r => r.restaurant_id === rId));
+                    }
+                });
+        });
+    }
+
+    static saveReviewToDBToResend(formBody) {
+        DBHelper.DB_PROMISE.then(db => {
+            const tx = db.transaction('reviews-to-resend', 'readwrite');
+            const os = tx.objectStore('reviews-to-resend');
+            os.put({
+                id: new Date().valueOf(), // unique ID
+                ...formBody
+            });
+            return tx.complete;
+        });
+    }
+
+    static resendReviewsFromDB() {
+        DBHelper.DB_PROMISE.then(db => {
+            if (!db) return;
+
+            // get all reviews to resend
+            db.transaction('reviews-to-resend')
+                .objectStore('reviews-to-resend')
+                .getAll()
+                .then(reviewsToResend => {
+                    if (reviewsToResend && reviewsToResend.length > 0) {
+                        for (let r of reviewsToResend) {
+                            // add them on server and DB
+                            DBHelper.addReview(r, (error, response) => {
+                                if (!error) {
+                                    // if everything went OK, then delete them (no longer needed)
+                                    const tx = db.transaction('reviews-to-resend', 'readwrite');
+                                    tx.objectStore('reviews-to-resend').delete(r.id);
+                                    // and update HTML
+                                    tx.complete.then(t => fillReviewsHTML());
+                                }
+                            });
+                        }
+                    }
+                });
+        });
     }
 
     /**
@@ -289,6 +344,13 @@ class DBHelper {
     }
 
     static addReview(formData, callback) {
+        console.log('addReview', formData);
+        if (!navigator.onLine && !formData.hasOwnProperty('id')) { // if it has id it is already in DB
+            console.log('detected offline, saving for later!');
+            DBHelper.saveReviewToDBToResend(formData);
+            return;
+        }
+
         fetch(`${DBHelper.BACKEND_URL}/reviews/`, {
             method: 'POST',
             body: JSON.stringify(formData)

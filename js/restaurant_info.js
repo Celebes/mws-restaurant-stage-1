@@ -2,6 +2,21 @@ let restaurant;
 var map;
 
 /**
+ * Online and Offline events
+ */
+
+if(navigator.onLine) {
+    userIsBackOnline();
+}
+
+window.addEventListener('online',  userIsBackOnline);
+
+function userIsBackOnline() {
+    console.log('user is back online!');
+    DBHelper.resendReviewsFromDB();
+}
+
+/**
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
@@ -136,6 +151,8 @@ fillReviewsHTML = (restaurant = self.restaurant) => {
         });
         container.appendChild(ul);
     });
+
+    // TODO fetchRestaurantReviewsToResend
 }
 
 /**
@@ -200,7 +217,7 @@ addReview = (e, form, restaurant = self.restaurant) => {
         const submitStatus = document.getElementById('submit-status');
         if (error) {
             submitStatus.className = 'status-error';
-            submitStatus.innerText = 'ERROR ADDING REVIEW';
+            submitStatus.innerText = 'ERROR ADDING REVIEW, IT HAS BEEN SAVED TO RESEND LATER, WHEN YOU ARE BACK ON-LINE';
         } else {
             submitStatus.className = 'status-success';
             submitStatus.innerText = 'SUCCES ADDING REVIEW';
