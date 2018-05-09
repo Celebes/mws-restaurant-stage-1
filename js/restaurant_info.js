@@ -114,7 +114,7 @@ fillReviewsHTML = (restaurant = self.restaurant) => {
         const title = document.createElement('h2');
         title.innerHTML = 'Reviews';
         container.appendChild(title);
-        
+
         if (error) { // Got an error!
             console.error(error);
             const noReviews = document.createElement('p');
@@ -199,9 +199,10 @@ addReview = (e, form, restaurant = self.restaurant) => {
     DBHelper.addReview(formData, (error, response) => {
         const submitStatus = document.getElementById('submit-status');
         if (error) {
+            submitStatus.className = 'status-error';
             submitStatus.innerText = 'ERROR ADDING REVIEW';
         } else {
-            console.log('response from adding review', response);
+            submitStatus.className = 'status-success';
             submitStatus.innerText = 'SUCCES ADDING REVIEW';
             fillReviewsHTML();
         }

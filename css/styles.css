@@ -356,6 +356,32 @@ nav.main h1 a {
     margin: 0 auto 30px;
 }
 
+/* ------- ADD REVIEW ------- */
+
+.add-review-form-table {
+    margin: 0 auto;
+    width: 80vw;
+}
+
+.add-review-form-table select,
+.add-review-form-table textarea,
+.add-review-form-table input {
+    width: 100%;
+}
+
+.center-td {
+    text-align: center;
+    font-weight: 900;
+}
+
+.status-error {
+    color: red;
+}
+
+.status-success {
+    color: green;
+}
+
 /* ------- RESPONSIVE ------- */
 
 @media screen and (max-width: 460px) {
@@ -396,5 +422,9 @@ nav.main h1 a {
 
     .box-map {
         order: 1;
+    }
+
+    .add-review-form-table {
+        width: 40vw;
     }
 }
