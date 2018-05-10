@@ -123,20 +123,25 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (restaurant = self.restaurant) => {
+    console.log('fillReviewsHTML!');
     DBHelper.fetchRestaurantReviews(restaurant.id, (error, reviews) => {
         const container = document.getElementById('reviews-container');
-        container.innerHTML = '';
-        const title = document.createElement('h2');
-        title.innerHTML = 'Reviews';
-        container.appendChild(title);
 
         if (error) { // Got an error!
             console.error(error);
             const noReviews = document.createElement('p');
-            noReviews.innerHTML = 'Couldn\'t load reviews!';
+            noReviews.innerHTML = 'Couldn\'t load fresh reviews from the server!';
             container.appendChild(noReviews);
             return;
         }
+
+        // if we have info from DB or fresh data from the server - repopulate reviews
+        // this way we won't delete reviews from DB if there is a server problem
+
+        container.innerHTML = '';
+        const title = document.createElement('h2');
+        title.innerHTML = 'Reviews';
+        container.appendChild(title);
 
         if (!reviews) {
             const noReviews = document.createElement('p');
@@ -152,7 +157,30 @@ fillReviewsHTML = (restaurant = self.restaurant) => {
         container.appendChild(ul);
     });
 
-    // TODO fetchRestaurantReviewsToResend
+    DBHelper.fetchRestaurantReviewsToResend(restaurant.id, (reviews) => {
+        console.log('fetchRestaurantReviewsToResend');
+        const container = document.getElementById('reviews-to-resend-container');
+        container.innerHTML = '';
+
+        if (!reviews || reviews.length === 0) {
+            const submitStatus = document.getElementById('submit-status');
+            if (submitStatus.className === 'status-error') {
+                submitStatus.className = 'status-success';
+                submitStatus.innerText = 'THANKS FOR WAITING, YOUR REVIEWS ADDED PREVIOUSLY AND SCHEDULED FOR RESEND HAVE FINISHED SUCCESSFULLY.';
+            }
+            return; // don't show this section at all if there's nothing to resend
+        }
+
+        const title = document.createElement('h2');
+        title.innerHTML = 'Reviews to resend';
+        container.appendChild(title);
+
+        const ul = document.createElement('ul');
+        reviews.forEach(review => {
+            ul.appendChild(createReviewHTML(review));
+        });
+        container.appendChild(ul);
+    });
 }
 
 /**
@@ -210,7 +238,8 @@ addReview = (e, form, restaurant = self.restaurant) => {
         restaurant_id: restaurant.id,
         name: form.name.value,
         rating: form.rating.value,
-        comments: form.comments.value
+        comments: form.comments.value,
+        createdAt: new Date().valueOf()
     };
     console.log('formData', formData);
     DBHelper.addReview(formData, (error, response) => {
@@ -221,7 +250,7 @@ addReview = (e, form, restaurant = self.restaurant) => {
         } else {
             submitStatus.className = 'status-success';
             submitStatus.innerText = 'SUCCES ADDING REVIEW';
-            fillReviewsHTML();
         }
+        fillReviewsHTML();
     });
 }

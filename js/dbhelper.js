@@ -133,7 +133,7 @@ class DBHelper {
         });
     }
 
-    static fetchRestaurantReviewsToResend(id, callback) {
+    static fetchRestaurantReviewsToResend(rId, callback) {
         DBHelper.DB_PROMISE.then(db => {
             if (!db) return;
 
@@ -142,7 +142,9 @@ class DBHelper {
                 .getAll()
                 .then(restaurants => {
                     if (restaurants && restaurants.length > 0) {
-                        callback(null, restaurants.filter(r => r.restaurant_id === rId));
+                        callback(restaurants.filter(r => r.restaurant_id === rId));
+                    } else {
+                        callback(null);
                     }
                 });
         });
@@ -176,9 +178,9 @@ class DBHelper {
                                 if (!error) {
                                     // if everything went OK, then delete them (no longer needed)
                                     const tx = db.transaction('reviews-to-resend', 'readwrite');
-                                    tx.objectStore('reviews-to-resend').delete(r.id);
                                     // and update HTML
-                                    tx.complete.then(t => fillReviewsHTML());
+                                    tx.objectStore('reviews-to-resend').delete(r.id).then(t => fillReviewsHTML());
+                                    tx.complete;
                                 }
                             });
                         }
@@ -348,7 +350,7 @@ class DBHelper {
         if (!navigator.onLine && !formData.hasOwnProperty('id')) { // if it has id it is already in DB
             console.log('detected offline, saving for later!');
             DBHelper.saveReviewToDBToResend(formData);
-            return;
+            return callback({error: 'offline'}, null);
         }
 
         fetch(`${DBHelper.BACKEND_URL}/reviews/`, {
