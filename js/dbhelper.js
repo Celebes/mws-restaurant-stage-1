@@ -82,7 +82,6 @@ class DBHelper {
     }
 
     static fetchReviewsFromDBByRestaurantId(rId, callback) {
-        console.log('fetchReviewsFromDBByRestaurantId');
         DBHelper.DB_PROMISE.then(db => {
             if (!db) return;
 
@@ -206,7 +205,6 @@ class DBHelper {
     }
 
     static fetchRestaurantReviews(id, callback) {
-        console.log('fetchRestaurantReviews!');
         DBHelper.fetchReviewsFromDBByRestaurantId(id, callback);
         fetch(`${DBHelper.BACKEND_URL}/reviews/?restaurant_id=${id}`)
             .then(response => {
@@ -343,9 +341,7 @@ class DBHelper {
     }
 
     static addReview(formData, callback) {
-        console.log('addReview', formData);
         if (!navigator.onLine && !formData.hasOwnProperty('id')) { // if it has id it is already in DB
-            console.log('detected offline, saving for later!');
             DBHelper.saveReviewToDBToResend(formData);
             return callback({error: 'offline'}, null);
         }

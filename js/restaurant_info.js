@@ -1,8 +1,6 @@
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js', {scope: '/'}).then(function (reg) {
-        console.log('reg', reg);
         if (reg.installing) {
-            console.log('reg.installing', reg.installing);
             reg.installing.onerror = (error) => console.log('error', error);
             console.log('Service worker installing');
         } else if (reg.waiting) {
@@ -31,7 +29,6 @@ if(navigator.onLine) {
 window.addEventListener('online',  userIsBackOnline);
 
 function userIsBackOnline() {
-    console.log('user is back online!');
     DBHelper.resendReviewsFromDB();
 }
 
@@ -39,6 +36,7 @@ function userIsBackOnline() {
  * Initialize Google map, called from HTML.
  */
 initMap = () => {
+    console.log('initMap!');
     fetchRestaurantFromURL((error, restaurant) => {
         if (error) { // Got an error!
             console.error(error);
@@ -68,7 +66,6 @@ fetchRestaurantFromURL = (callback) => {
     }
     const id = getParameterByName('id');
     if (!id) { // no id found in URL
-        error = 'No restaurant id in URL'
         callback(error, null);
     } else {
         DBHelper.fetchRestaurantById(id, (error, restaurant) => {
@@ -146,7 +143,6 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (restaurant = self.restaurant) => {
-    console.log('fillReviewsHTML!');
     DBHelper.fetchRestaurantReviews(restaurant.id, (error, reviews) => {
         const container = document.getElementById('reviews-container');
 
@@ -181,7 +177,6 @@ fillReviewsHTML = (restaurant = self.restaurant) => {
     });
 
     DBHelper.fetchRestaurantReviewsToResend(restaurant.id, (reviews) => {
-        console.log('fetchRestaurantReviewsToResend');
         const container = document.getElementById('reviews-to-resend-container');
         container.innerHTML = '';
 
@@ -265,7 +260,6 @@ addReview = (e, form, restaurant = self.restaurant) => {
         comments: form.comments.value,
         createdAt: new Date().valueOf()
     };
-    console.log('formData', formData);
     DBHelper.addReview(formData, (error, response) => {
         const submitStatus = document.getElementById('submit-status');
         if (error) {
