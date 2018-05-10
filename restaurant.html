@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="no-js" lang="en">
 
 <head>
     <!-- Normalize.css for better cross-browser consistency -->
@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="css/styles.css" type="text/css">
     <!-- Viewport meta tag for RWD -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="blue" />
     <title>Restaurant Info</title>
 </head>
 
@@ -119,12 +121,13 @@
 <!-- End footer -->
 
 <!-- Beginning scripts -->
-<script async defer src="js/lazysizes.min.js"></script>
-<script async defer type="text/javascript" charset="utf-8" src="js/idb.js"></script>
+<script src="js/modernizr-custom.js"></script>
+<script src="js/lazysizes.min.js"></script>
 <!-- Database helpers -->
+<script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
 <script type="text/javascript" src="js/dbhelper.js"></script>
 <!-- Main javascript file -->
-<script async defer type="text/javascript" src="js/restaurant_info.js"></script>
+<script type="text/javascript" src="js/restaurant_info.js"></script>
 <!-- Google Maps -->
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIHpYCSR_OJZ8-B2GqLndkIfZ1fYt4oac&libraries=places&callback=initMap"></script>
 <!-- End scripts -->

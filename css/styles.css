@@ -106,7 +106,7 @@ nav.main h1 a {
 
 /* Add a color to all links inside the list */
 #breadcrumb li a {
-    color: #0275d8;
+    color: black;
     text-decoration: none;
 }
 
@@ -211,6 +211,7 @@ nav.main h1 a {
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
+    cursor: pointer;
 }
 
 .favorite-button {
@@ -218,7 +219,7 @@ nav.main h1 a {
 }
 
 .not-favorite-button {
-    background-color: darkgrey;
+    background-color: black;
 }
 
 /* ====================== Restaurant Details ====================== */
@@ -263,7 +264,7 @@ nav.main h1 a {
 }
 
 #restaurant-name {
-    color: #f18200;
+    color: black;
     font-family: Arial, sans-serif;
     font-size: 30pt;
     font-weight: 200;
@@ -308,7 +309,7 @@ nav.main h1 a {
 }
 
 #reviews-container h2, #reviews-to-resend-container h2 {
-    color: #f58500;
+    color: black;
     font-size: 24pt;
     font-weight: 300;
     letter-spacing: -1px;

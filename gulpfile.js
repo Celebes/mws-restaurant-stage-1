@@ -6,29 +6,31 @@ const browserSync = require('browser-sync').create();
 
 const BUILD_DEV_TASKS = [
     'copy-html',
-	'copy-manifest',
+    'copy-manifest',
     'copy-css',
     'copy-sw',
     'copy-images',
     'copy-lazysizes',
     'copy-idb',
     'convert-img-to-webp',
-    'scripts'
+    'scripts',
+    'copy-http-server-starter'
 ];
 
 const BUILD_PROD_TASKS = [
     'copy-html',
-	'copy-manifest',
+    'copy-manifest',
     'copy-sw',
     'copy-images',
     'copy-lazysizes',
     'copy-idb',
     'convert-img-to-webp',
     'minify-css',
-    'scripts-prod'
+    'scripts-prod',
+    'copy-http-server-starter'
 ];
 
-gulp.task('default', BUILD_DEV_TASKS, function () {
+gulp.task('default', BUILD_PROD_TASKS, function () {
     gulp.watch('./css/*.css', ['copy-css']);
     gulp.watch('./js/**/*.js', ['scripts']);
     gulp.watch('./sw.js', ['copy-sw']);
@@ -50,6 +52,11 @@ gulp.task('minify-css', () => {
     gulp.src('./css/*.css')
         .pipe(cleanCSS())
         .pipe(gulp.dest('dist/css'));
+});
+
+gulp.task('copy-http-server-starter', () => {
+    gulp.src('./start_http_server.bat')
+        .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('copy-html', () => {
@@ -95,7 +102,7 @@ gulp.task('convert-img-to-webp', () =>
 
 gulp.task('scripts', () => {
     gulp.src('js/**/*.js')
-        //.pipe(babel())
+    //.pipe(babel())
         .pipe(gulp.dest('dist/js'));
 })
 

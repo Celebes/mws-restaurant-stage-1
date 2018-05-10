@@ -1,3 +1,22 @@
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js', {scope: '/'}).then(function (reg) {
+        console.log('reg', reg);
+        if (reg.installing) {
+            console.log('reg.installing', reg.installing);
+            reg.installing.onerror = (error) => console.log('error', error);
+            console.log('Service worker installing');
+        } else if (reg.waiting) {
+            console.log('Service worker installed');
+        } else if (reg.active) {
+            console.log('Service worker active');
+        }
+
+    }).catch(function (error) {
+        // registration failed
+        console.log('Registration failed with ' + error);
+    });
+}
+
 let restaurant;
 var map;
 
@@ -19,11 +38,15 @@ function userIsBackOnline() {
 /**
  * Initialize Google map, called from HTML.
  */
-window.initMap = () => {
+initMap = () => {
     fetchRestaurantFromURL((error, restaurant) => {
         if (error) { // Got an error!
             console.error(error);
         } else {
+            if (self.map) {
+                // map is already there, no need to recreate it
+                return;
+            }
             self.map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 16,
                 center: restaurant.latlng,
@@ -235,6 +258,7 @@ getParameterByName = (name, url) => {
 addReview = (e, form, restaurant = self.restaurant) => {
     e.preventDefault();
     const formData = {
+        id: new Date().valueOf(), // unique ID
         restaurant_id: restaurant.id,
         name: form.name.value,
         rating: form.rating.value,

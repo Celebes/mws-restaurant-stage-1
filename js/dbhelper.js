@@ -154,10 +154,7 @@ class DBHelper {
         DBHelper.DB_PROMISE.then(db => {
             const tx = db.transaction('reviews-to-resend', 'readwrite');
             const os = tx.objectStore('reviews-to-resend');
-            os.put({
-                id: new Date().valueOf(), // unique ID
-                ...formBody
-            });
+            os.put(formBody);
             return tx.complete;
         });
     }
